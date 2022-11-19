@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="./css/musicInfo.css" />
+    <title>MusicInformationApp</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Music Info</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <form id="searchMusic" class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Type an artist.." aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="container p-2">
+
+        <h2>Artist's albums:</h2>
+        <div class="container px-4">
+            <div class="d-flex gx-5">
+                <div class="p-1">
+                    <div class="card" style="width: 18rem;">
+                        <img src="https://picsum.photos/200" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h3 class="card-text">My life is a duck</h3>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
+                                of
+                                the card's content.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-1">
+                    <div class="card" style="width: 18rem;">
+                        <img src="https://picsum.photos/200" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h3 class="card-text">My life is a bus</h3>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
+                                of
+                                the card's content.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class=" p-1">
+                    <div class="card" style="width: 18rem;">
+                        <img src="https://picsum.photos/200" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h3 class="card-text">My life is a chicken</h3>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
+                                of
+                                the card's content.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/musicInfo.js"></script>
+</body>
+
+</html>
