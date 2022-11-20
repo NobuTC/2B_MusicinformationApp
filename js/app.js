@@ -91,3 +91,5 @@ function makeAlbums(albums) {
     );
   }
 }
+
+fetchArtistInfo("Adele");
