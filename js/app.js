@@ -46,6 +46,17 @@ async function fetchArtistInfo(artistName) {
   }
 }
 
+async function fetchAlbumInfo(artist, album) {
+  const albumDataResponse = await fetch(
+    `${API_endpoint}/?method=album.getinfo&artist=${encodeURI(
+      artist
+    )}&album=${encodeURI(album)}&api_key=${API_KEY}&format=json`
+  );
+  const data = await albumDataResponse.json();
+  const tracks = data.album.tracks.track;
+  return tracks;
+}
+
 // Tämä ottaa artistejen nimet ja näyttää albumit
 function renderAlbum(artistName) {
   fetchArtistInfo(artistName);
@@ -80,14 +91,72 @@ function makeAlbums(albums) {
 
     allAlbums.insertAdjacentHTML(
       "beforeend",
-      `<div class="p-1 col">
+      `<div class="p-1 col" data-url="${result.url}">
         <div class="card album-card">
             <img src="${result.image[3]["#text"]}" class="card-img-top" alt="...">
             <div class="card-body">
                 <h4 class="card-text">${trimmedName}</h4>
+                <button class="btn btn-outline-success view-album-button" data-url="${result.url}" data-album="${result.name}" data-artist="${result.artist.name}">View songs</button>
             </div>
         </div>
+        <div class="album-info">
+            <ol class="album-info-list"></ol>
+        </div>
     </div>`
+    );
+
+    const viewAlbumButtons = document.querySelectorAll(".view-album-button");
+    viewAlbumButtons.forEach((element) => {
+      element.addEventListener("click", handleViewButtonClicked);
+    });
+  }
+}
+
+async function handleViewButtonClicked(clickEvent) {
+  const artist = clickEvent.target.getAttribute("data-artist");
+  const album = clickEvent.target.getAttribute("data-album");
+  const url = clickEvent.target.getAttribute("data-url");
+
+  const albumElement = document.querySelector(`[data-url="${url}"]`);
+  const albumInfoElement = albumElement.querySelector(".album-info-list");
+
+  // If doesn't have active-album class name
+  if (albumElement.className.indexOf("active-album") === -1) {
+    albumElement.className = "p-1 active-album";
+    clickEvent.target.innerHTML = "Close information";
+  } else {
+    albumElement.className = "p-1 col";
+    clickEvent.target.innerHTML = "View songs";
+    albumInfoElement.innerHTML = "";
+    return;
+  }
+
+  try {
+    const tracks = await fetchAlbumInfo(artist, album);
+
+    if (tracks.length > 0) {
+      for (let track of tracks) {
+        albumInfoElement.insertAdjacentHTML(
+          "beforeend",
+          `
+          <li>${track.name}</li>
+          `
+        );
+      }
+    } else {
+      albumInfoElement.insertAdjacentHTML(
+        "beforeend",
+        `
+        <li>${album}</li>
+        `
+      );
+    }
+  } catch {
+    albumInfoElement.insertAdjacentHTML(
+      "beforeend",
+      `
+      <li><b>Error:</b> No tracks found.</li>
+      `
     );
   }
 }

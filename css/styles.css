@@ -24,6 +24,13 @@ body {
 }
 
 .card-body {
-    height: 70px;
-    ;
+    height: 100px;
+}
+
+.active-album {
+    background-color: #fff;
+    display: flex;
+    margin: 8px 0;
+    border-radius: 4px;
+    border: 1px solid #e3e3e3;
 }
