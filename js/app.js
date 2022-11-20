@@ -95,7 +95,7 @@ function makeAlbums(albums) {
         <div class="card album-card">
             <img src="${result.image[3]["#text"]}" class="card-img-top" alt="...">
             <div class="card-body">
-                <h4 class="card-text">${trimmedName}</h4>
+                <h5 class="card-text">${trimmedName}</h5>
                 <button class="btn btn-outline-success view-album-button" data-url="${result.url}" data-album="${result.name}" data-artist="${result.artist.name}">View songs</button>
             </div>
         </div>
