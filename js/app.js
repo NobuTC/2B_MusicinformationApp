@@ -28,6 +28,7 @@ async function fetchArtistInfo(artistName) {
     const { topalbums } = data;
     const { album } = topalbums;
 
+    //filter out jolla on kuva ja nimi
     const filteredAlbums = album.filter((result) => {
       return result.name !== "(null)" && result.image[3]["#text"];
     });
