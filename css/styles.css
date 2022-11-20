@@ -9,6 +9,21 @@ body {
     width: 18rem;
 }
 
-.album-section {
-    display: none; //peittää asiat
+#albumContainer {
+    display: none;
+    /* peittää asiat */
+}
+
+.album-card {
+    width: 18rem;
+}
+
+#error-message {
+    color: red;
+    display: none;
+}
+
+.card-body {
+    height: 70px;
+    ;
 }

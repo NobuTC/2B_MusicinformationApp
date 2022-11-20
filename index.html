@@ -35,47 +35,14 @@
                 <button class="artist-button">Taylor Swift</button>
             </div>
         </div>
+        <br />
+        <p id="error-message">I don't find any albums. Try again.</p>
     </div>
 
-    <div class="container p-2 album-section">
+    <div class="container p-2 album-section" id="albumContainer">
         <h2>Artist's albums:</h2>
         <div class="container px-4">
-            <div class="d-flex gx-5">
-                <div class="p-1">
-                    <div class="card" style="width: 18rem;">
-                        <img src="https://picsum.photos/200" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h3 class="card-text">Album X</h3>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of
-                                the card's content.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-1">
-                    <div class="card" style="width: 18rem;">
-                        <img src="https://picsum.photos/200" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h3 class="card-text">Album 1</h3>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of
-                                the card's content.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class=" p-1">
-                    <div class="card" style="width: 18rem;">
-                        <img src="https://picsum.photos/200" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h3 class="card-text">Album 2</h3>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of
-                                the card's content.</p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+            <div class="row gx-5" id="allAlbums"></div>
         </div>
     </div>
     <script src="./js/app.js"></script>
