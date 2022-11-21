@@ -4,16 +4,23 @@ const API_KEY = "fe0a387a761610f339793ba9a3810acc";
 const API_endpoint = "https://ws.audioscrobbler.com/2.0";
 const albumNameLength = 20;
 
-const buttons = document.querySelectorAll(".artist-button");
-buttons.forEach((element) => {
+const suggestedArtistButtons = document.querySelectorAll(".artist-button");
+suggestedArtistButtons.forEach((element) => {
   element.addEventListener("click", handleArtistButtonClicked);
 });
 
 const form = document.querySelector("#searchMusic");
 form.addEventListener("submit", enteredArtist);
 
-//encodeURI antaa erikois ä,ö Å oman koodin esim. encodeURI('Hälö')
-//tulostaa'H%C3%A4l%C3%B6'
+function handleArtistButtonClicked(clickEvent) {
+  const buttonElement = clickEvent.target;
+  const artist = buttonElement.innerHTML;
+  fetchArtistInfo(artist);
+}
+
+// Tämä ottaa artistejen nimet ja näyttää albumit
+// encodeURI antaa erikois ä,ö Å oman koodin esim. encodeURI('Hälö')
+// tulostaa'H%C3%A4l%C3%B6'
 // http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=Cher&api_key=YOUR_API_KEY&format=json
 async function fetchArtistInfo(artistName) {
   const errorMessageEl = document.querySelector("#error-message");
@@ -34,6 +41,7 @@ async function fetchArtistInfo(artistName) {
     });
 
     if (filteredAlbums.length) {
+      // Insert album to HTML
       makeAlbums(filteredAlbums);
       errorMessageEl.style.display = "none";
     } else {
@@ -44,6 +52,14 @@ async function fetchArtistInfo(artistName) {
     allAlbums.innerHTML = "";
     errorMessageEl.style.display = "block";
   }
+}
+
+//Antaa formEventin. Kun kirjoitan jotain ja submitform.
+function enteredArtist(submitEvent) {
+  submitEvent.preventDefault();
+  const inputElement = document.querySelector("#searchInput");
+  const artist = inputElement.value;
+  fetchArtistInfo(artist);
 }
 
 async function fetchAlbumInfo(artist, album) {
@@ -57,25 +73,7 @@ async function fetchAlbumInfo(artist, album) {
   return tracks;
 }
 
-// Tämä ottaa artistejen nimet ja näyttää albumit
-function renderAlbum(artistName) {
-  fetchArtistInfo(artistName);
-}
-
-function handleArtistButtonClicked(mouseEvent) {
-  const element = mouseEvent.target;
-  const artist = element.innerHTML;
-  renderAlbum(artist);
-}
-
-//Antaa formEventin. Kun kirjoitan jotain ja submitform.
-function enteredArtist(formEvent) {
-  formEvent.preventDefault();
-  const inputElement = document.querySelector("#searchInput");
-  const inputValue = inputElement.value;
-  renderAlbum(inputValue);
-}
-
+// Take album and insert to HTML with #allAlbum
 function makeAlbums(albums) {
   const allAlbums = document.querySelector("#allAlbums");
   allAlbums.innerHTML = "";
