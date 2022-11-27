@@ -5,6 +5,10 @@ Albumeissa on myös niiden biisit.
 
 https://ubiquitous-flan-189248.netlify.app
 
+## New changes
+
+- Add jQuery support
+
 ## App.js
 
 - I get API_KEY, API URL from last.fm developer page
