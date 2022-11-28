@@ -4,17 +4,17 @@ const API_KEY = "fe0a387a761610f339793ba9a3810acc";
 const API_endpoint = "https://ws.audioscrobbler.com/2.0";
 const albumNameLength = 20;
 
-const suggestedArtistButtons = document.querySelectorAll(".artist-button");
-suggestedArtistButtons.forEach((element) => {
-  element.addEventListener("click", handleArtistButtonClicked);
+const suggestedArtistButtons = $(".artist-button");
+suggestedArtistButtons.each((index, element) => {
+  $(element).click(handleArtistButtonClicked);
 });
 
-const form = document.querySelector("#searchMusic");
-form.addEventListener("submit", enteredArtist);
+const form = $("#searchMusic");
+form.submit(enteredArtist);
 
 function handleArtistButtonClicked(clickEvent) {
   const buttonElement = clickEvent.target;
-  const artist = buttonElement.innerHTML;
+  const artist = $(buttonElement).html();
   fetchArtistInfo(artist);
 }
 
@@ -23,7 +23,10 @@ function handleArtistButtonClicked(clickEvent) {
 // tulostaa'H%C3%A4l%C3%B6'
 // http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=Cher&api_key=YOUR_API_KEY&format=json
 async function fetchArtistInfo(artistName) {
-  const errorMessageEl = document.querySelector("#error-message");
+  const errorMessageEl = $("#error-message");
+  const inputElement = $("#searchInput");
+  const artist = inputElement.val(artistName);
+
   try {
     const artistDataResponse = await fetch(
       `${API_endpoint}/?method=artist.gettopalbums&artist=${encodeURI(
@@ -41,24 +44,26 @@ async function fetchArtistInfo(artistName) {
     });
 
     if (filteredAlbums.length) {
-      // Insert album to HTML
+      const allAlbums = $("#allAlbums");
       makeAlbums(filteredAlbums);
-      errorMessageEl.style.display = "none";
+
+      errorMessageEl.css("display", "none");
     } else {
-      errorMessageEl.style.display = "block";
+      errorMessageEl.css("display", "block");
     }
-  } catch {
-    const allAlbums = document.querySelector("#allAlbums");
+  } catch (e) {
+    const allAlbums = $("#allAlbums");
     allAlbums.innerHTML = "";
-    errorMessageEl.style.display = "block";
+    errorMessageEl.css("display", "block");
+    console.error(e);
   }
 }
 
 //Antaa formEventin. Kun kirjoitan jotain ja submitform.
 function enteredArtist(submitEvent) {
   submitEvent.preventDefault();
-  const inputElement = document.querySelector("#searchInput");
-  const artist = inputElement.value;
+  const inputElement = $("#searchInput");
+  const artist = inputElement.val();
   fetchArtistInfo(artist);
 }
 
@@ -75,88 +80,115 @@ async function fetchAlbumInfo(artist, album) {
 
 // Take album and insert to HTML with #allAlbum
 function makeAlbums(albums) {
-  const allAlbums = document.querySelector("#allAlbums");
-  allAlbums.innerHTML = "";
+  const allAlbums = $("#allAlbums");
+  allAlbums.html("");
 
-  const albumContainer = document.querySelector("#albumContainer");
-  albumContainer.style.display = "block";
+  const albumContainer = $("#albumContainer");
+  albumContainer.css("display", "block");
 
+  let i = 0;
   for (let result of albums) {
+    i++;
     var trimmedName =
       result.name.length > albumNameLength
         ? result.name.substring(0, albumNameLength - 3) + "..."
         : result.name;
 
-    allAlbums.insertAdjacentHTML(
-      "beforeend",
-      `<div class="p-1 col" data-url="${result.url}">
+    const btn = $(
+      ` <button class="btn btn-outline-success view-album-button" data-url="${result.url}" data-album="${result.name}" data-artist="${result.artist.name}">View songs</button>`
+    );
+
+    btn.click(handleViewButtonClicked);
+
+    const el = $(`<div class="p-1 col album-cover" data-url="${result.url}">
         <div class="card album-card">
             <img src="${result.image[3]["#text"]}" class="card-img-top" alt="...">
             <div class="card-body">
                 <h5 class="card-text">${trimmedName}</h5>
-                <button class="btn btn-outline-success view-album-button" data-url="${result.url}" data-album="${result.name}" data-artist="${result.artist.name}">View songs</button>
             </div>
         </div>
         <div class="album-info">
             <ol class="album-info-list"></ol>
         </div>
-    </div>`
-    );
+    </div>`);
+    el.find('[class*="card-body"]').first().append(btn);
+    allAlbums.append(el);
+    allAlbums.find('[class*="album-cover"]');
 
-    const viewAlbumButtons = document.querySelectorAll(".view-album-button");
-    viewAlbumButtons.forEach((element) => {
-      element.addEventListener("click", handleViewButtonClicked);
-    });
+    if (i === 1) {
+      $(".background-picture").css(
+        "background-image",
+        "url(" + result.image[3]["#text"] + ")"
+      );
+    }
   }
 }
 
-async function handleViewButtonClicked(clickEvent) {
-  const artist = clickEvent.target.getAttribute("data-artist");
-  const album = clickEvent.target.getAttribute("data-album");
-  const url = clickEvent.target.getAttribute("data-url");
+let shouldShowSongs = false;
 
-  const albumElement = document.querySelector(`[data-url="${url}"]`);
-  const albumInfoElement = albumElement.querySelector(".album-info-list");
+async function handleViewButtonClicked(clickEvent) {
+  const artist = $(clickEvent.target).attr("data-artist");
+  const album = $(clickEvent.target).attr("data-album");
+  const url = $(clickEvent.target).attr("data-url");
+
+  const albumElement = $(`[data-url="${url}"]`);
+  const albumInfoElement = albumElement
+    .find('[class*="album-info-list"]')
+    .first();
+
+  albumInfoElement.hide();
 
   // If doesn't have active-album class name
-  if (albumElement.className.indexOf("active-album") === -1) {
-    albumElement.className = "p-1 active-album";
+  if (!albumElement.hasClass("active-album")) {
+    albumElement.removeClass("col");
+    albumElement.addClass("active-album");
     clickEvent.target.innerHTML = "Close information";
+    shouldShowSongs = true;
   } else {
-    albumElement.className = "p-1 col";
+    albumElement.addClass("col");
+    albumElement.removeClass("active-album");
     clickEvent.target.innerHTML = "View songs";
-    albumInfoElement.innerHTML = "";
+    albumInfoElement.html("");
+    shouldShowSongs = false;
     return;
   }
 
   try {
     const tracks = await fetchAlbumInfo(artist, album);
 
+    // Prevent double click
+    if (!shouldShowSongs) return;
+
     if (tracks.length > 0) {
       for (let track of tracks) {
-        albumInfoElement.insertAdjacentHTML(
-          "beforeend",
+        albumInfoElement.append(
           `
           <li>${track.name}</li>
           `
         );
       }
     } else {
-      albumInfoElement.insertAdjacentHTML(
-        "beforeend",
+      albumInfoElement.append(
         `
         <li>${album}</li>
         `
       );
     }
-  } catch {
-    albumInfoElement.insertAdjacentHTML(
-      "beforeend",
+    albumInfoElement.fadeIn();
+  } catch (e) {
+    albumInfoElement.append(
       `
       <li><b>Error:</b> No tracks found.</li>
       `
     );
+    albumInfoElement.fadeIn();
+    console.error(e);
   }
 }
 
-fetchArtistInfo("Adele");
+$("#logo").click(function (e) {
+  e.preventDefault();
+  location.reload();
+});
+
+fetchArtistInfo("Jonas Brothers");

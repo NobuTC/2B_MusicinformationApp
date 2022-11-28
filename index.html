@@ -13,8 +13,8 @@
 
 <body>
     <nav class="navbar navbar-expand-lg bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Music Info</a>
+        <div class="container container-fluid">
+            <a class="navbar-brand" id="logo" href="#">Music Info</a>
 
             <div class="navbar-collapse" id="navbarSupportedContent">
                 <form id="searchMusic" class="d-flex" role="search">
@@ -25,8 +25,10 @@
             </div>
         </div>
     </nav>
+    <div class="background-overlay"></div>
+    <div class="background-picture"></div>
 
-    <div class="container p-2 artist-section">
+    <div class="container p-8 artist-section">
         <h2>Suggested Artists:</h2>
         <div class="container px4">
             <div class="d-flex gx-5">
@@ -43,7 +45,7 @@
     </div>
 
     <div class="container p-2 album-section" id="albumContainer">
-        <h2>Artist's albums:</h2>
+
         <div class="container px-4">
             <div class="row gx-5" id="allAlbums"></div>
         </div>
